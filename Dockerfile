@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o watchadoin .
+RUN \
+  go run github.com/playwright-community/playwright-go/cmd/playwright@latest install --with-deps && \
+  go build -o watchadoin .
 
-ENTRYPOINT ["/app/watchadoin"]
+CMD ["/app/watchadoin"]
