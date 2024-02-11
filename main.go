@@ -18,11 +18,8 @@ var (
 	selector = os.Getenv("SELECTOR")
 )
 
-// func runChecker
-
 func main() {
-	err := playwright.Install()
-	if err != nil {
+	if err := playwright.Install(); err != nil {
 		log.Fatal("could not install playwright:", err)
 	}
 
@@ -64,17 +61,21 @@ func runChecker(c *checker.Checker, m *mail.Mail) error {
 	}
 
 	if !checkerResponse.IsSame {
-		slog.Info("Progress has changed!", *checkerResponse.OldValue, *checkerResponse.NewValue)
+		slog.Info("Value has changed!", *checkerResponse.OldValue, *checkerResponse.NewValue)
 		slog.Info("Sending mail")
-		err := m.SendMail("Changes detected on "+url, "Old value: "+*checkerResponse.OldValue+"\nNew value: "+*checkerResponse.NewValue, from, to)
-		if err != nil {
+		if err := m.SendMail(
+			"Changes detected on "+url, "Old value: "+*checkerResponse.OldValue+"\nNew value: "+*checkerResponse.NewValue,
+			from,
+			to,
+		); err != nil {
 			slog.Error("error sending mail:", err)
-		} else {
-			slog.Info("Mail sent!")
+			return nil
 		}
-	} else {
-		slog.Info("Progress is the same")
+
+		slog.Info("Mail sent!")
+		return nil
 	}
 
+	slog.Info("Value is the same")
 	return nil
 }
