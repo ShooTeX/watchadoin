@@ -70,8 +70,7 @@ func runChecker(c *checker.Checker, m *mail.Mail) error {
 			from,
 			to,
 		); err != nil {
-			slog.Error("error sending mail:", err)
-			return nil
+			return err
 		}
 
 		slog.Info("Mail sent!")
