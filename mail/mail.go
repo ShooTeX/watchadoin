@@ -1,20 +1,20 @@
 package mail
 
 import (
-	"log"
+	"fmt"
 	"net/smtp"
 )
 
 type Mail struct {
 	smtp.Auth
-	from     string
+	username string
 	password string
 	smtpHost string
 	smtpPort string
 }
 
 type MailOptions struct {
-	From     string
+	Username string
 	Password string
 	SmtpHost string
 	SmtpPort string
@@ -22,14 +22,16 @@ type MailOptions struct {
 
 func New(o *MailOptions) *Mail {
 	return &Mail{
-		from:     o.From,
+		username: o.Username,
 		password: o.Password,
 		smtpHost: o.SmtpHost,
 		smtpPort: o.SmtpPort,
-		Auth:     smtp.PlainAuth("", o.From, o.Password, o.SmtpHost),
+		Auth:     smtp.PlainAuth("", o.Username, o.Password, o.SmtpHost),
 	}
 }
 
-func (m *Mail) SendMail(message, to string) {
-	log.Printf("sending mail to %s", to)
+func (m *Mail) SendMail(subject, message, from, to string) error {
+	message = fmt.Sprintf("From: %s\nTo: %s\nSubject: %s\n%s", from, to, subject, message)
+
+	return smtp.SendMail(m.smtpHost+":"+m.smtpPort, m.Auth, from, []string{to}, []byte(message))
 }
