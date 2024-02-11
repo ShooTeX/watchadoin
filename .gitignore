@@ -19,5 +19,6 @@ go.work
 
 # env
 .direnv
+.envrc
 .config.json
 

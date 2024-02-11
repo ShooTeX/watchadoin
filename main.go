@@ -18,5 +18,3 @@ func main() {
 
 	m.SendMail("Hello, World!", to)
 }
-
-// cmd to run:
