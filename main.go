@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/shootex/watchadoin/mail"
@@ -20,11 +20,11 @@ func main() {
 		SmtpPort: os.Getenv("MAIL_SMTP_PORT"),
 	})
 
-	log.Println("Sending mail")
+	slog.Info("Sending mail")
 	err := m.SendMail("Oh it's a new mail!", "Hello, World!", from, to)
 	if err != nil {
-		log.Println("error sending mail:", err)
+		slog.Error("error sending mail:", err)
 	} else {
-		log.Println("Mail sent!")
+		slog.Info("Mail sent!")
 	}
 }
