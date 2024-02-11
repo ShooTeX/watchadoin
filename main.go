@@ -44,7 +44,9 @@ func main() {
 	c := cron.New()
 
 	c.AddFunc("@hourly", func() {
-		runChecker(pc, m)
+		if err := runChecker(pc, m); err != nil {
+			slog.Error(err.Error())
+		}
 	})
 
 	c.Start()
